@@ -5,7 +5,8 @@ function! vcoder#context#get() abort
   return s:context
 endfunction
 
-"FIXME: must be configurable and reliable
+" FIXME: must be configurable and reliable
+" REFACTOR: all path related functions must be put in a separate module
 function! vcoder#context#project_root(ft) abort
   let git_root = finddir('.git', '.;')
   if empty(git_root)
@@ -76,6 +77,10 @@ endfunction
 
 function! vcoder#context#update() abort
   let context = {}
+  " ignore filetype if not enabled in rules
+  if !has_key(vcoder#rules#_get()['ft'], &l:ft)
+    return
+  endif
   let context.ft = &l:ft
   let context.current_file = expand('%:p')
   let context.file_name = expand('%:t')
