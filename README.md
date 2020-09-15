@@ -38,6 +38,8 @@ call vcoder#enable('vim')
 * Context: The current context for a possible test run. Context is the glue
   between rules, events and test runners.
 * Test Runner: Executes tests by applying a test execution strategy.
+* Result View: Display test result when data is available. Uses an interface to
+  provide a concrete view mechanism (previewwindow, fzf, whatever)
 
 ### Asynchronous Event Handling
 

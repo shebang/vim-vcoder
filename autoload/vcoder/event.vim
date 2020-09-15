@@ -35,7 +35,11 @@ function! vcoder#event#dispatch(ft) abort
   let testrunner = vcoder#context#get_testrunner(context)
   "FIXME: the testrunner should decide what to do: run single test, run all
   "tests
-  call vcoder#testrunner#run(testrunner).then({out -> vcoder#testrunner#show_result(testrunner, out)})
+  call vcoder#testrunner#run(testrunner)
+    \.then({out -> vcoder#resultview#show(testrunner, out)})
+    \.catch({err -> execute('echoerr "Error: " . err', '')})
+
+
 endfunction
 
 

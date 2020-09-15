@@ -7,10 +7,3 @@ function! vcoder#testrunner#run(testrunner) abort
 endfunction
 
 
-function! vcoder#testrunner#show_result(testrunner, out) abort
-  verbose echom '>>>>>>>> vcoder test result <<<<<<<<'
-  for line in split(a:out, '\n')
-    verbose echom '>>>: '.line
-  endfor
-
-endfunction
