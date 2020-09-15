@@ -44,15 +44,16 @@ function! s:eval_testfile_location(context, location) abort
   endif
 
 
-  if test_candidate =~? '%source_dir%'
-    let test_candidate = substitute(test_candidate, '%source_dir%', a:context.file_relative_path, 'g')
+  if test_candidate =~? '%file_project_dir%'
+    let test_candidate = substitute(test_candidate, '%file_project_dir%', a:context.file_project_dir, 'g')
   endif
 
 
-  if test_candidate =~? '%source_fname%'
-    let test_candidate = substitute(test_candidate, '%source_fname%', a:context.file_name, 'g')
+  if test_candidate =~? '%file_name%'
+    let test_candidate = substitute(test_candidate, '%file_name%', a:context.file_name, 'g')
   endif
 
+  verbose echom test_candidate
   return filereadable(test_candidate) ? test_candidate : ''
 endfunction
 
@@ -85,7 +86,7 @@ function! vcoder#context#update() abort
   let context.current_file = expand('%:p')
   let context.file_name = expand('%:t')
   let context.project_root = vcoder#context#project_root('vim')
-  let context.file_relative_path = fnamemodify(strpart(context.current_file, strlen(context.project_root)+1), ':h')
+  let context.file_project_dir = fnamemodify(strpart(context.current_file, strlen(context.project_root)+1), ':h')
 
   let s:context = {}
   let s:context = extend(s:context, context)

@@ -8,11 +8,20 @@ I use vital.vim for managing external dependencies.
 
 Goals:
 
-* asynchronous tests (Async.Promise from vital.vim, requires Vim8/ Neovim)
+* asynchronous tests (Async.Promise from vital.vim, requires Vim 8/ Neovim)
 * declarative configuration
 * keep it small and easy to use
 
 ## Usage Proposal
+
+### Define Test Directory Layout
+
+In order to run tests on single files or to execute a test suite vcoder needs
+to know the test directory structure. You can use the following placeholders:
+
+* *%project_root%*: resolves to project root
+* *%file_project_dir%*: the relative path to the source file starting from project root
+* *%file_name%*: the file name 
 
 ```vim
 " Define testfile location
@@ -20,10 +29,17 @@ call vcoder#rules#for('vim', 'testfile', {
   \ 'location': '%project_root%/test/themis/%source_dir%/%source_fname%',
   \ 'autoexec': v:true,
   \ })
+```
 
+### Define Test Runner
+
+```vim
 " Define testrunner
 call vcoder#rules#for('vim', 'testrunner', 'themis')
+```
+### Enable vcoder for a Filetype
 
+```vim
 " Enable vcoder for vim
 call vcoder#enable('vim')
 ```

@@ -14,7 +14,7 @@ function! vcoder#rules#_init() abort
   let s:rules.ft.vim = {}
   let s:rules.ft.vim.testrunner = 'themis'
   let s:rules.ft.vim.testfile = {
-    \ 'location': '%project_root%/test/themis/%source_dir%/%source_fname%',
+    \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
     \ 'autoexec': v:true,
     \ }
 

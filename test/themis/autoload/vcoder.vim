@@ -12,7 +12,7 @@ function! s:suite.test_vcoder() abort
 
 
   call vcoder#rules#for('vim', 'testfile', {
-    \ 'location': '%project_root%/test/themis/%source_dir%/%source_fname%',
+    \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
     \ 'autoexec': v:true,
     \ })
 
