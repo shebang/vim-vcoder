@@ -40,8 +40,6 @@ endfunction
 
 
 function! s:themis_run_file_async(testrunner) abort
-  " verbose echom '>>>>>>>>>>> exec TEST <<<<<<<<<<<<'
-  " verbose echom 's:themis_run_file_async(...) '
   let cmd = [a:testrunner.cmd] + a:testrunner.args + [a:testrunner.context.test_candidate]
 
   return s:Promise.new({resolve, reject -> job_start(cmd, {
