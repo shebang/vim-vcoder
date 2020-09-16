@@ -1,4 +1,17 @@
+function! s:test_project_deploy() abort
+  let cmd = 'git clone https://github.com/shebang/vcoder-test.vim '. s:test_projects_path . '/vcoder-test.vim'
+  call system(cmd)
+endfunction
+
 filetype plugin on
+
+let s:cache_path = vcoder#cache_path()
+let s:test_projects_path = s:cache_path . '/test'
+
+if !isdirectory(s:test_projects_path . '/vcoder-test.vim')
+  call s:test_project_deploy()
+endif
+
 
 call vcoder#rules#for('vim', 'testfile', {
   \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
@@ -6,5 +19,7 @@ call vcoder#rules#for('vim', 'testfile', {
   \ })
 call vcoder#rules#for('vim', 'testrunner', 'themis')
 
-
 call vcoder#enable('vim')
+
+
+

@@ -17,17 +17,6 @@ function! vcoder#testrunner#themis#init(context) abort
   return s:themis
 endfunction
 
-" runs all tests for the project
-function! vcoder#testrunner#themis#run(...) abort
-
-endfunction
-
-
-" runs file test
-function! vcoder#testrunner#themis#run_file(...) abort
-
-endfunction
-
 " {{{1: Implementation
 " ============================================================================
 
