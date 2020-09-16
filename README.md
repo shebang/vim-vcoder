@@ -19,9 +19,9 @@ Goals:
 In order to run tests on single files or to execute a test suite vcoder needs
 to know the test directory structure. You can use the following placeholders:
 
-* *%project_root%*: resolves to project root
-* *%file_project_dir%*: the relative path to the source file starting from project root
-* *%file_name%*: the file name 
+* `%project_root%`: resolves to project root
+* `%file_project_dir%`: the relative path to the source file starting from project root
+* `%file_name%`: the file name 
 
 ```vim
 " Define testfile location
