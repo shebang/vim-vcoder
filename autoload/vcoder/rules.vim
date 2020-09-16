@@ -8,7 +8,7 @@ endfunction
 
 function! vcoder#rules#_init() abort
   let s:rules = {}
-
+  let s:rules.testrunners = ['themis']
   " this is the active configuration, not to be confused with defaults (TODO)
   let s:rules.ft = {}
   let s:rules.ft.vim = {}
@@ -21,6 +21,9 @@ function! vcoder#rules#_init() abort
 
 endfunction
 
+function! vcoder#rules#testrunners() abort
+  return s:rules.testrunners
+endfunction
 
 function! vcoder#rules#for(ft, rule, expr) abort
   let rules = vcoder#rules#_get()

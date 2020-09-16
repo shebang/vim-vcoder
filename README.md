@@ -4,12 +4,9 @@ vcoder is a test execution framework for vim. The project has just been started
 so there's no real functionality right now besides running a single test for a vim script
 via [themis](https://github.com/thinca/vim-themis).
 
-I use vital.vim for managing external dependencies.
-
 Goals:
 
-* asynchronous tests (Async.Promise from vital.vim, requires Vim 8/ Neovim)
-* declarative configuration
+* asynchronous tests (requires Vim 8/ Neovim)
 * keep it small and easy to use
 
 ## Usage Proposal
@@ -41,7 +38,7 @@ call vcoder#rules#for('vim', 'testrunner', 'themis')
 
 ```vim
 " Enable vcoder for vim
-call vcoder#enable('vim')
+call vcoder#enable(['vim'])
 ```
 
 ## Design Notes
@@ -57,11 +54,4 @@ call vcoder#enable('vim')
 * Result View: Display test result when data is available. Uses an interface to
   provide a concrete view mechanism (previewwindow, fzf, whatever)
 
-### Asynchronous Event Handling
-
-This project uses Async.Promise from vital.vim for handling asynchronous
-callbacks. Async.Promis mimics [Javascript's Promise API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-and should be fun to use for any Node developer ;)
-
-[![Powered by vital.vim](https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg)](https://github.com/vim-jp/vital.vim)
 

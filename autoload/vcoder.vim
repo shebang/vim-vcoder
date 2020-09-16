@@ -5,14 +5,17 @@ if !exists('s:vcoder')
   let s:vcoder.enabled = []
 endif
 
-function! vcoder#enable(ft) abort
+function! vcoder#enable(ft_list) abort
+
+  if type(a:ft_list) != v:t_list
+    throw 'ERROR(InvalidArguments): 1st argument of vcoder#enable must be a list of filetypes.'
+  endif
 
   " FIXME: validation
-  "
-  call add(s:vcoder.enabled, a:ft)
+  let s:vcoder.enabled += a:ft_list
   call vcoder#rules#_init()
   call vcoder#event#init()
-
+  call vcoder#testrunner#init()
 endfunction
 
 function! vcoder#enabled_ft() abort

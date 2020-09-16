@@ -19,7 +19,7 @@ call vcoder#rules#for('vim', 'testfile', {
   \ })
 call vcoder#rules#for('vim', 'testrunner', 'themis')
 
-call vcoder#enable('vim')
+call vcoder#enable(['vim'])
 
 
 

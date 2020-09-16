@@ -17,6 +17,6 @@ function! s:suite.test_vcoder() abort
     \ })
 
 
-  call vcoder#enable('vim')
+  call vcoder#enable(['vim'])
 
 endfunction

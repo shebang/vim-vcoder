@@ -1,6 +1,3 @@
-let s:V = vital#vcoder#new()
-let s:Promise = s:V.import('Async.Promise')
-
 function! vcoder#event#init() abort
 
   augroup vcoder_context_handler
@@ -31,20 +28,13 @@ endfunction
 
 
 function! vcoder#event#dispatch(ft) abort
-
-  if !has_key(vcoder#context#get().buffers, expand('%:p'))
+  let path_file = expand('%:p')
+  if !has_key(vcoder#context#get().buffers, path_file)
     return
   endif
 
-  let context = vcoder#context#get().buffers[expand('%:p')]
-  let testrunner = vcoder#context#get_testrunner(context)
-
-  ""FIXME: the testrunner should decide what to do: run single test, run all
-  ""tests
-  call vcoder#testrunner#run(testrunner)
-    \.then({out -> vcoder#resultview#show(testrunner, out)})
-    \.catch({err -> execute('echom "Error: " . err', '')})
-
+  let context = vcoder#context#get().buffers[path_file]
+  call vcoder#testrunner#run(context)
 endfunction
 
 

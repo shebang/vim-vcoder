@@ -17,7 +17,7 @@ function! vcoder#context#project_root(ft) abort
   return fnamemodify(git_root, ':p:h:h')
 endfunction
 
-function! vcoder#context#get_testrunner(context) abort
+function! vcoder#context#testrunner(context) abort
   if empty(a:context)
     return
   endif
@@ -31,10 +31,9 @@ function! vcoder#context#get_testrunner(context) abort
     return
   endif
 
-  let init_func = 'vcoder#testrunner#' . rules.testrunner . '#init'
-  let testrunner = call(init_func, [a:context])
+  let runner_func = 'vcoder#testrunner#' . rules.testrunner . '#runner'
 
-  return testrunner
+  return runner_func
 endfunction
 
 function! vcoder#context#get_test_candidate(context) abort
@@ -101,5 +100,7 @@ function! vcoder#context#update() abort
   let file_context.file_project_dir = fnamemodify(strpart(file_context.current_file, strlen(file_context.project_root)+1), ':h')
 
   let file_context.test_candidate = vcoder#context#get_test_candidate(file_context)
+  let file_context.testrunner = vcoder#context#testrunner(file_context)
+  let file_context.testmode = 'single'
 
 endfunction
