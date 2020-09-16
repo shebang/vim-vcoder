@@ -34,7 +34,7 @@ call vcoder#rules#for('vim', 'testfile', {
 " Define testrunner
 call vcoder#rules#for('vim', 'testrunner', 'themis')
 ```
-### Enable vcoder for a Filetype
+### Enable vcoder 
 
 ```vim
 " Enable vcoder for vim
