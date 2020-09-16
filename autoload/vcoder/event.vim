@@ -27,7 +27,9 @@ function! s:register_autocmds() abort
 endfunction
 
 
-function! vcoder#event#dispatch(ft) abort
+function! vcoder#event#dispatch(...) abort
+  let ft = a:0 == 1 ? a:1 : ''
+
   let path_file = expand('%:p')
   if !has_key(vcoder#context#get().buffers, path_file)
     return
