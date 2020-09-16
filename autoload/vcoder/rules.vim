@@ -15,6 +15,7 @@ function! vcoder#rules#_init() abort
   let s:rules.ft.vim.testrunner = 'themis'
   let s:rules.ft.vim.testfile = {
     \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
+    \ 'exclude_pattern': 'test\/themis',
     \ 'autoexec': v:true,
     \ }
 

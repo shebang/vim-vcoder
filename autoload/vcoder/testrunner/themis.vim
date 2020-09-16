@@ -30,6 +30,7 @@ endfunction
 
 " {{{1: Implementation
 " ============================================================================
+
 function! s:read(chan, part) abort
   let out = []
   while ch_status(a:chan, {'part' : a:part}) =~# 'open\|buffered'
@@ -42,11 +43,11 @@ endfunction
 function! s:themis_run_file_async(testrunner) abort
   let cmd = [a:testrunner.cmd] + a:testrunner.args + [a:testrunner.context.test_candidate]
 
+  "FIXME: exit code > 0 means test case error but how ro detect other errors?
   return s:Promise.new({resolve, reject -> job_start(cmd, {
     \   'drop' : 'never',
     \   'close_cb' : {ch -> 'do nothing'},
-    \   'exit_cb' : {ch, code ->
-    \     code ? reject(s:read(ch, 'err')) : resolve(s:read(ch, 'out'))
+    \   'exit_cb' : {ch, code -> resolve(s:read(ch, 'out'))
     \   },
     \ })})
 endfunction
@@ -58,7 +59,6 @@ function! s:themis_run_file(testrunner) abort
     return s:themis_run_file_async(a:testrunner)
   endif
 endfunction
-
 
 function! s:themis_deploy() abort
   let cmd = 'git clone https://github.com/thinca/vim-themis '. vcoder#cache_path() . '/vim-themis'

@@ -11,5 +11,5 @@ endfunction
 function! s:suite.test_resultview() abort
 
 
-  call s:assert.equal(1,1)
+  call s:assert.equal(1,0)
 endfunction

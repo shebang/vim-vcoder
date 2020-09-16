@@ -5,7 +5,8 @@ function! vcoder#event#init() abort
 
   augroup vcoder_context_handler
     autocmd!
-    autocmd BufEnter * call vcoder#context#update()
+    autocmd BufRead * call vcoder#context#update()
+    autocmd FileType * call vcoder#context#set_filetype()
   augroup END
 
   call s:register_autocmds()
@@ -30,15 +31,19 @@ endfunction
 
 
 function! vcoder#event#dispatch(ft) abort
-  let context = vcoder#context#get()
 
+  if !has_key(vcoder#context#get().buffers, expand('%:p'))
+    return
+  endif
+
+  let context = vcoder#context#get().buffers[expand('%:p')]
   let testrunner = vcoder#context#get_testrunner(context)
-  "FIXME: the testrunner should decide what to do: run single test, run all
-  "tests
+
+  ""FIXME: the testrunner should decide what to do: run single test, run all
+  ""tests
   call vcoder#testrunner#run(testrunner)
     \.then({out -> vcoder#resultview#show(testrunner, out)})
-    \.catch({err -> execute('echoerr "Error: " . err', '')})
-
+    \.catch({err -> execute('echom "Error: " . err', '')})
 
 endfunction
 
