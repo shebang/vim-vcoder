@@ -18,6 +18,11 @@ function! vcoder#rules#_init() abort
     \ 'exclude_pattern': 'test\/themis',
     \ 'autoexec': v:true,
     \ }
+  let s:rules.ft.vim.testsuite = {
+    \ 'location': '%project_root%/test/themis',
+    \ 'autoexec': v:true,
+    \ }
+
 
 endfunction
 

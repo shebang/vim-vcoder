@@ -47,13 +47,16 @@ function! vcoder#context#get_test_candidate(context) abort
 
   let rules = vcoder#rules#_get()['ft'][a:context.ft].testfile
 
-  if !has_key(rules, 'location')
-    return
+  if has_key(rules, 'location')
+    let test_candidate = vcoder#util#resolve_placeholders(rules.location, a:context)
+    let a:context.test_candidate = filereadable(test_candidate) ? test_candidate : ''
+  endif
+  let rules = vcoder#rules#_get()['ft'][a:context.ft].testsuite
+  if has_key(rules, 'location')
+    let a:context.test_suite = vcoder#util#resolve_placeholders(rules.location, a:context)
   endif
 
-  let test_candidate = vcoder#util#resolve_placeholders(rules.location, a:context)
-  return filereadable(test_candidate) ? test_candidate : ''
-
+  return a:context
 endfunction
 
 function! vcoder#context#set_filetype() abort
@@ -99,8 +102,8 @@ function! vcoder#context#update() abort
   let file_context.project_root = vcoder#context#project_root('vim')
   let file_context.file_project_dir = fnamemodify(strpart(file_context.current_file, strlen(file_context.project_root)+1), ':h')
 
-  let file_context.test_candidate = vcoder#context#get_test_candidate(file_context)
   let file_context.testrunner = vcoder#context#testrunner(file_context)
   let file_context.testmode = 'single'
+  let file_context = vcoder#context#get_test_candidate(file_context)
 
 endfunction
