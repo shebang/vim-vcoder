@@ -59,10 +59,6 @@ function! vcoder#context#get_test_candidate(context) abort
     let test_candidate = vcoder#util#resolve_placeholders(rules.location, a:context)
     let a:context.test_candidate = filereadable(test_candidate) ? test_candidate : ''
   endif
-  let rules = vcoder#rules#_get()['ft'][a:context.ft].testsuite
-  if has_key(rules, 'location')
-    let a:context.test_suite = vcoder#util#resolve_placeholders(rules.location, a:context)
-  endif
 
   return a:context
 endfunction
