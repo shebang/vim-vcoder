@@ -2,9 +2,34 @@
 " @section Introduction, intro
 " @stylized shebang
 " @library
-" @order intro dict
-" vcoder is a test execution framework for vim.
+" @order intro installation
+" vcoder is a test execution framework for vim. It's main purpose is for
+" programmers who want to run automated tests in their editor.
 "
+
+""
+" @section Installation, installation
+"
+" vcoder uses a declarative style to configure the behaviour of text execution.
+"
+" >
+"   call vcoder#testrunner#register('themis')
+"
+"   call vcoder#rules#for('vim', 'testfile', {
+"     \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
+"     \ })
+"   call vcoder#rules#for('vim', 'testproject', {
+"     \ 'location': '%project_root%/test/themis',
+"     \ })
+"   call vcoder#rules#for('vim', 'testrunner', 'themis')
+"
+"   call vcoder#enable(['vim'])
+" <
+"
+"
+
+
+
 
 function! vcoder#init() abort
   let s:vcoder = {}
@@ -12,7 +37,7 @@ function! vcoder#init() abort
     \ expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache') . '/vcoder', 1)
 
   call vcoder#rules#_init()
-  call vcoder#testrunner#init()
+  " call vcoder#testrunner#init()
 endfunction
 
 
@@ -29,6 +54,9 @@ function! vcoder#enabled_ft() abort
 endfunction
 
 function! vcoder#cache_path() abort
+  if !exists('s:vcoder')
+    call vcoder#init()
+  endif
   return s:vcoder.cache_path
 endfunction
 

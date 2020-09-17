@@ -3,27 +3,39 @@ function! vcoder#testrunner#_get() abort
   if !exists('s:testrunner')
     call vcoder#testrunner#init()
   endif
-
   return s:testrunner
-endfunction
-
-function! vcoder#testrunner#call(name, method, ...) abort
-  let func = 'vcoder#testrunner#' . a:name . '#' . a:method
-  return call(func, a:000)
 endfunction
 
 function! vcoder#testrunner#init() abort
   let s:testrunner = {}
   let s:testrunner.spec_defaults = {}
   let s:testrunner.registry = {}
+endfunction
 
-  " for testrunner in vcoder#rules#testrunners()
-  "   let func = 'vcoder#testrunner#' . testrunner . '#init'
-  "   let runner = call(func, [])
-  "   if has_key(runner, 'build_cmd')
-  "     call vcoder#testrunner#jobstart([join(runner.build_cmd)])
-  "   endif
-  " endfor
+""
+" Returns the target to execute (file or project). This function is dependant
+" on the values of the following variables. Each may return a test target effectivly
+" overwriting the defaults. Order is as follows
+"
+" * b:vcoder_target
+" * g:vcoder_target
+" * default: file
+"
+function! vcoder#testrunner#get_target(name, context) abort
+  let default_target = 'file'
+  let from = ''
+  if exists('b:vcoder_target')
+    let target = b:vcoder_target
+    let from = 'buffer local'
+  elseif exists('g:vcoder_target')
+    let target = g:vcoder_target
+    let from = 'global'
+  endif
+  if !empty(from)
+    call vcoder#util#notify_user('using target ' . target . ' from ' . from . ' variable.')
+    return target =~? '\m\c^\(file\|project\)$' ? target : default_target
+  endif
+  return default_target
 endfunction
 
 ""
@@ -38,7 +50,6 @@ function! vcoder#testrunner#register(name) abort
   let spec = call(spec_func, [])
 
   let registry[a:name] = spec
-
 endfunction
 
 function! vcoder#testrunner#is_installed(name) abort
@@ -46,7 +57,8 @@ function! vcoder#testrunner#is_installed(name) abort
   if !has_key(registry, a:name)
     return 0
   endif
-  return filereadable(registry[a:name].cmd)
+  let testrunner = registry[a:name]
+  return testrunner.is_installed()
 endfunction
 
 
@@ -58,7 +70,7 @@ function! vcoder#testrunner#install(name) abort
   endif
 
   if vcoder#testrunner#is_installed(a:name)
-    echo '[vcode] ' . a:name . ' already installed'
+    call vcoder#util#notify_user(a:name . ' already installed')
     return
   endif
 
@@ -77,7 +89,10 @@ function! vcoder#testrunner#run(name, context) abort
   endif
 
   let testrunner = registry[a:name]
-  call vcoder#testrunner#jobstart(testrunner.test_file(a:context))
+  let target = 'test_' . vcoder#testrunner#get_target(a:name, a:context)
+  call vcoder#testrunner#jobstart(call(testrunner[target], [a:context]))
+  " call vcoder#testrunner#jobstart(testrunner.test_file(a:context))
+  " call vcoder#testrunner#jobstart(testrunner.test_project(a:context))
 endfunction
 
 function! s:build_command(cmd)
@@ -99,7 +114,7 @@ endfunction
 
 function! s:exit_handler(job_id, data, event_type) abort
   if a:data == 0
-    echo '[vcoder] command completed successfuly'
+    call vcoder#util#notify_user('command completed successfuly')
   else
     echohl WarningMsg | echo '[vcoder] command exits with code ' . string(a:data) | echohl None
   endif
@@ -110,7 +125,6 @@ function! s:stdout_handler_resultview(job_id, data, event_type) abort
 endfunction
 
 function! s:stderr_handler_resultview(job_id, data, event_type) abort
-  " call vcoder#resultview#show(testrunner, out)
   call vcoder#resultview#show(a:data)
 endfunction
 

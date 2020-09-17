@@ -5,11 +5,13 @@
 CONTENTS                                                 *vim-vcoder-contents*
   1. Introduction...........................................|vim-vcoder-intro|
   2. Functions..........................................|vim-vcoder-functions|
+  3. Installation....................................|vim-vcoder-installation|
 
 ==============================================================================
 INTRODUCTION                                                *vim-vcoder-intro*
 
-vcoder is a test execution framework for vim.
+vcoder is a test execution framework for vim. It's main purpose is for
+programmers who want to run automated tests in their editor.
 
 
 ==============================================================================
@@ -19,18 +21,18 @@ vcoder#testrunner#register({name})              *vcoder#testrunner#register()*
   Registers test runner {name} with vcoder
 
 
-vcoder#testrunner#run({context})                     *vcoder#testrunner#run()*
-  Runs a test by delegating the work to the approriate test runner.
+vcoder#testrunner#run({name}, {context})             *vcoder#testrunner#run()*
+  Runs a test described by {context} with test runner {name}.
 
 
 vcoder#testrunner#jobstart({cmd})               *vcoder#testrunner#jobstart()*
-  Starts a job from a test runner. Restults are displayed depending on
-  opts.notify (see below).
+  opts.summary_only (see below).
 
   Options can be configured using [a:1] which is a |Dict| with the following
   settings:
 
-  opts.notify: 'status_line', 'previewwindow'
+    * opts.summary_only: v:false Shows job status only via status line. The
+      default is to show the results via resultview.
 
 
 vcoder#testrunner#themis#spec()              *vcoder#testrunner#themis#spec()*
@@ -51,6 +53,29 @@ vcoder#util#resolve_placeholders({text}, {values})
   Replace all placeholders in {a:text} with values from dict {a:values}.
   Placeholders are wrapped with %-chars. Each placeholder has a corresponding
   key in the values dict.
+
+==============================================================================
+INSTALLATION                                         *vim-vcoder-installation*
+
+
+vcoder uses a declarative style to configure the behaviour of text execution.
+
+
+>
+  call vcoder#testrunner#register('themis')
+
+  call vcoder#rules#for('vim', 'testfile', {
+    \ 'location': '%project_root%/test/themis/%file_project_dir%/%file_name%',
+    \ })
+  call vcoder#rules#for('vim', 'testproject', {
+    \ 'location': '%project_root%/test/themis',
+    \ })
+  call vcoder#rules#for('vim', 'testrunner', 'themis')
+
+  call vcoder#enable(['vim'])
+<
+
+
 
 
 vim:tw=78:ts=8:ft=help:norl:

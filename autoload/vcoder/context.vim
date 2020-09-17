@@ -39,12 +39,11 @@ function! vcoder#context#testrunner(context) abort
     return
   endif
 
-  let runner_func = 'vcoder#testrunner#' . rules.testrunner . '#runner'
 
-  return runner_func
+  return rules.testrunner
 endfunction
 
-function! vcoder#context#get_test_candidate(context) abort
+function! vcoder#context#get_test_candidates(context) abort
   if !has_key(a:context, 'ft')
     return
   endif
@@ -53,15 +52,16 @@ function! vcoder#context#get_test_candidate(context) abort
     return
   endif
 
-  let rules = vcoder#rules#_get()['ft'][a:context.ft].testfile
+  let rules = vcoder#rules#_get()['ft'][a:context.ft]
 
-  if !has_key(rules, 'location')
-    return
+  let test_candidates = {}
+  let file_test = vcoder#util#resolve_placeholders(rules.testfile.location, a:context)
+  if filereadable(file_test)
+    let test_candidates.file = vcoder#util#resolve_placeholders(rules.testfile.location, a:context)
   endif
+  let test_candidates.project = vcoder#util#resolve_placeholders(rules.testproject.location, a:context)
 
-  let test_candidate = vcoder#util#resolve_placeholders(rules.location, a:context)
-  return filereadable(test_candidate) ? test_candidate : ''
-
+  return test_candidates
 endfunction
 
 function! vcoder#context#set_filetype() abort
@@ -83,12 +83,12 @@ function! vcoder#context#set_filetype() abort
 
   let testfile_rules = vcoder#rules#_get()['ft'][ft].testfile
   if has_key(testfile_rules, 'exclude_pattern')
-    if expand("<afile>") =~? testfile_rules.exclude_pattern
+    if expand('<afile>') =~? testfile_rules.exclude_pattern
       return
     endif
   endif
 
-  let s:context.buffers[fnamemodify(expand("<afile>"), ':p')] = {'ft': ft}
+  let s:context.buffers[fnamemodify(expand('<afile>'), ':p')] = {'ft': ft}
   call vcoder#context#update()
 
 endfunction
@@ -107,7 +107,7 @@ function! vcoder#context#update() abort
   let file_context.project_root = vcoder#context#project_root('vim')
   let file_context.file_project_dir = fnamemodify(strpart(file_context.current_file, strlen(file_context.project_root)+1), ':h')
 
-  let file_context.test_candidate = vcoder#context#get_test_candidate(file_context)
+  let file_context.targets = vcoder#context#get_test_candidates(file_context)
   let file_context.testrunner = vcoder#context#testrunner(file_context)
   let file_context.testmode = 'single'
 
