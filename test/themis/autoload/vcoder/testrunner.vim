@@ -20,15 +20,9 @@ function! s:suite.test_register_test_runner_twice_is_ignored() abort
   call s:assert.equal(len(vcoder#testrunner#_get().registry), 1)
 endfunction
 
-"FIXME: should not be run here
-function! s:suite.test_install() abort
-  let themis_dir = $HOME . '/.cache/vcoder/vim-themis'
-  " FIXME: danger!
-  call system('rm -fr '.themis_dir)
-  let result = vcoder#testrunner#install('themis')
-  call themis#log('waiting 5s for installation to complete')
-  5sleep
-  call s:assert.equal(filereadable(themis_dir . '/bin/themis'),1)
-
+function! s:suite.test_jobstart() abort
+  let result = vcoder#testrunner#jobstart(['echo "test"'])
+  " call s:assert.equal(v:statusmsg,1)
 endfunction
+
 

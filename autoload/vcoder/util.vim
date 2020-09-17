@@ -16,6 +16,12 @@ function! vcoder#util#resolve_placeholders(text, values, ...) abort
 
 endfunction
 
+function! vcoder#util#notify_user(msg) abort
+  if type(a:msg) == v:t_string
+    echo '[vcoder] '.a:msg
+  endif
+endfunction
+
 " from: autoload/deoplete/util.vim
 function! vcoder#util#convert2list(expr) abort
   return type(a:expr) ==# v:t_list ? a:expr : [a:expr]

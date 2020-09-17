@@ -60,8 +60,8 @@ function! vcoder#event#dispatch(...) abort
   endif
 
   let context = vcoder#context#get().buffers[path_file]
-  if !empty(context.test_candidate)
-    call vcoder#testrunner#run(context)
+  if !empty(context.targets)
+    call vcoder#testrunner#run(context.testrunner, context)
   endif
 endfunction
 

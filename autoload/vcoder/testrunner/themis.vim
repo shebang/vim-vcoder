@@ -12,49 +12,36 @@
 "
 function! vcoder#testrunner#themis#spec() abort
 
-  let spec = {}
-  let spec.name = 'themis'
-  let spec.dir_name = vcoder#cache_path() . '/vim-themis'
-  let spec.install_cmd = [
-    \ 'git', 'clone', 'https://github.com/thinca/vim-themis ', spec.dir_name]
-  let spec.update_cmd = [ 'cd', spec.dir_name,  'git', 'pull', 'cd -']
+  let s:spec = {}
+  let s:spec.name = 'themis'
+  let s:spec.dir_name = vcoder#cache_path() . '/vim-themis'
+  let s:spec.install_cmd = [
+    \ 'git', 'clone', 'https://github.com/thinca/vim-themis ', s:spec.dir_name]
+  let s:spec.update_cmd = [ 'cd', s:spec.dir_name,  'git', 'pull', 'cd -']
 
-  let spec.cmd = spec.dir_name . '/bin/themis'
-  let spec.args = []
+  let s:spec.cmd = s:spec.dir_name . '/bin/themis'
+  let s:spec.args = []
+  let s:spec.targets = {}
+  let s:spec.targets.file = {}
+  let s:spec.targets.file.cmd = { context -> s:test_file(context) }
+  let s:spec.targets.file.args = []
+  let s:spec.targets.project = {}
+  let s:spec.targets.project.cmd = { context -> s:test_project(context) }
+  let s:spec.targets.project.args = ['-r']
+  let s:spec.is_installed = { -> filereadable(s:spec.cmd) }
+  let s:spec.test_project = { context -> s:test_project(context) }
+  let s:spec.test_file = { context -> s:test_file(context) }
 
-  return spec
+  return s:spec
+endfunction
+
+function! s:test_project(context) abort
+  return [s:spec.cmd] + s:spec.targets.project.args + [a:context.targets.project]
 endfunction
 
 
-function! vcoder#testrunner#themis#init() abort
-
-  let s:themis = {}
-  let s:themis.path_repo = vcoder#cache_path() . '/vim-themis'
-  let s:themis.cmd = vcoder#cache_path() . '/vim-themis/bin/themis'
-  let s:themis.build_cmd = ['git', 'clone',
-    \ 'https://github.com/thinca/vim-themis ',
-    \ vcoder#cache_path() . '/vim-themis']
-
-  let s:themis.is_deployed = { -> vcoder#testrunner#themis#is_deployed() }
-  let s:themis.args = []
-
-  if ! isdirectory(s:themis.path_repo)
-    call mkdir(s:themis.path_repo, 'p')
-  endif
-
-  return s:themis
-endfunction
-
-function! vcoder#testrunner#themis#is_deployed() abort
-   return filereadable(s:themis.cmd)
-endfunction
-
-function! vcoder#testrunner#themis#runner(context) abort
-
-  if a:context.testmode ==? 'single'
-    let cmd = [s:themis.cmd] + s:themis.args + [a:context.test_candidate]
-    call vcoder#testrunner#jobstart([join(cmd)])
-  endif
+function! s:test_file(context) abort
+  return [s:spec.cmd] + s:spec.targets.project.args + [a:context.targets.file]
 endfunction
 
 "" {{{1: Implementation
