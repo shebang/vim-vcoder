@@ -40,6 +40,11 @@ call vcoder#rules#for('vim', 'testrunner', 'themis')
 " Enable vcoder for vim
 call vcoder#enable(['vim'])
 ```
+## Credits
+
+This project is a fun and learning project. Many thanks to [Shougo](https://github.com/Shougo)
+which I learned a lot from and who is famous for his numerous vim plugins.  
+
 
 ## Design Notes
 
