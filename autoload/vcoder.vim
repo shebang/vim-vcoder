@@ -1,25 +1,24 @@
-if !exists('s:vcoder')
+
+function! vcoder#init() abort
   let s:vcoder = {}
   let s:vcoder.cache_path =
-  \ expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache') . '/vcoder', 1)
-  let s:vcoder.enabled = []
-endif
+    \ expand(($XDG_CACHE_HOME ? $XDG_CACHE_HOME : '~/.cache') . '/vcoder', 1)
 
-function! vcoder#enable(ft_list) abort
-
-  if type(a:ft_list) != v:t_list
-    throw 'ERROR(InvalidArguments): 1st argument of vcoder#enable must be a list of filetypes.'
-  endif
-
-  " FIXME: validation
-  let s:vcoder.enabled += a:ft_list
   call vcoder#rules#_init()
-  call vcoder#event#init()
   call vcoder#testrunner#init()
 endfunction
 
+
+function! vcoder#enable(ft_or_list) abort
+  return vcoder#event#_enable(a:ft_or_list)
+endfunction
+
+function! vcoder#disable(ft_or_list) abort
+  return vcoder#event#_disable(a:ft_or_list)
+endfunction
+
 function! vcoder#enabled_ft() abort
-  return s:vcoder.enabled
+  return vcoder#event#_enabled_ft()
 endfunction
 
 function! vcoder#cache_path() abort
@@ -27,5 +26,5 @@ function! vcoder#cache_path() abort
 endfunction
 
 function! vcoder#is_enabled(ft) abort
-  return index(s:vcoder.enabled, a:ft) >= 0 ? 1 : 0
+  return vcoder#event#_is_enabled(a:ft)
 endfunction
