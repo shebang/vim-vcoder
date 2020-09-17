@@ -7,19 +7,23 @@ function! vcoder#testrunner#_get() abort
   return s:testrunner
 endfunction
 
+function! vcoder#testrunner#call(name, method, ...) abort
+  let func = 'vcoder#testrunner#' . a:name . '#' . a:method
+  return call(func, a:000)
+endfunction
 
 function! vcoder#testrunner#init() abort
   let s:testrunner = {}
   let s:testrunner.spec_defaults = {}
   let s:testrunner.registry = {}
 
-  for testrunner in vcoder#rules#testrunners()
-    let func = 'vcoder#testrunner#' . testrunner . '#init'
-    let runner = call(func, [])
-    if has_key(runner, 'build_cmd') && !runner.is_deployed()
-      call vcoder#testrunner#jobstart([join(runner.build_cmd)])
-    endif
-  endfor
+  " for testrunner in vcoder#rules#testrunners()
+  "   let func = 'vcoder#testrunner#' . testrunner . '#init'
+  "   let runner = call(func, [])
+  "   if has_key(runner, 'build_cmd')
+  "     call vcoder#testrunner#jobstart([join(runner.build_cmd)])
+  "   endif
+  " endfor
 endfunction
 
 ""
@@ -37,27 +41,44 @@ function! vcoder#testrunner#register(name) abort
 
 endfunction
 
+function! vcoder#testrunner#is_installed(name) abort
+  let registry = vcoder#testrunner#_get().registry
+  if !has_key(registry, a:name)
+    return 0
+  endif
+  return filereadable(registry[a:name].cmd)
+endfunction
+
+
 function! vcoder#testrunner#install(name) abort
   let registry = vcoder#testrunner#_get().registry
   if !has_key(registry, a:name)
     echohl WarningMsg | echo "No such test runner: " . string(a:name) | echohl None
     return
   endif
+
+  if vcoder#testrunner#is_installed(a:name)
+    echo '[vcode] ' . a:name . ' already installed'
+    return
+  endif
+
   let testrunner = registry[a:name]
-  let cmd = [join(testrunner.install_cmd)]
-  verbose echom 'exec: '.string(cmd)
-  let job = vcoder#testrunner#jobstart(cmd,
-    \ {'summary_only': v:true})
-  " verbose echom testrunner
+  call vcoder#testrunner#jobstart(testrunner.install_cmd, {'summary_only':1})
 endfunction
 
 ""
-" Runs a test by delegating the work to the approriate test runner.
+" Runs a test described by {context} with test runner {name}.
 "
-function! vcoder#testrunner#run(context) abort
-  call call(a:context.testrunner, [a:context])
-endfunction
+function! vcoder#testrunner#run(name, context) abort
+  let registry = vcoder#testrunner#_get().registry
+  if !has_key(registry, a:name)
+    echohl WarningMsg | echo "No such test runner: " . string(a:name) | echohl None
+    return
+  endif
 
+  let testrunner = registry[a:name]
+  call vcoder#testrunner#jobstart(testrunner.test_file(a:context))
+endfunction
 
 function! s:build_command(cmd)
   if has('win32') || has('win64')
@@ -98,9 +119,9 @@ function! s:exit_handler_resultview(job_id, data, event_type) abort
 endfunction
 
 "
-""
 " Starts a job from a test runner. Restults are displayed depending on
-" opts.notify (see below).
+""
+" opts.summary_only (see below).
 "
 " Options can be configured using [a:1] which is a |Dict| with the following
 " settings:
@@ -110,11 +131,12 @@ endfunction
 "   via resultview.
 "
 function! vcoder#testrunner#jobstart(cmd, ...) abort
+  let cmd = vcoder#util#convert2list(a:cmd)
   let defaults = {'summary_only': v:false}
   let opts = a:0 == 1 ? a:1 : {}
   let opts = extend(defaults, opts)
 
-  let command = s:build_command(a:cmd)
+  let command = s:build_command([join(cmd)])
 
   if opts.summary_only
     let jobid = vcoder#job#start(command, {

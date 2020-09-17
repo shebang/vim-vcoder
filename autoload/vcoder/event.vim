@@ -60,7 +60,7 @@ function! vcoder#event#dispatch(...) abort
   endif
 
   let context = vcoder#context#get().buffers[path_file]
-  call vcoder#testrunner#run(context)
+  call vcoder#testrunner#run('themis', context)
 endfunction
 
 

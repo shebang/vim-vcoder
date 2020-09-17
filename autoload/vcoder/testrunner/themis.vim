@@ -12,17 +12,18 @@
 "
 function! vcoder#testrunner#themis#spec() abort
 
-  let spec = {}
-  let spec.name = 'themis'
-  let spec.dir_name = vcoder#cache_path() . '/vim-themis'
-  let spec.install_cmd = [
-    \ 'git', 'clone', 'https://github.com/thinca/vim-themis ', spec.dir_name]
-  let spec.update_cmd = [ 'cd', spec.dir_name,  'git', 'pull', 'cd -']
+  let s:spec = {}
+  let s:spec.name = 'themis'
+  let s:spec.dir_name = vcoder#cache_path() . '/vim-themis'
+  let s:spec.install_cmd = [
+    \ 'git', 'clone', 'https://github.com/thinca/vim-themis ', s:spec.dir_name]
+  let s:spec.update_cmd = [ 'cd', s:spec.dir_name,  'git', 'pull', 'cd -']
 
-  let spec.cmd = spec.dir_name . '/bin/themis'
-  let spec.args = []
+  let s:spec.cmd = s:spec.dir_name . '/bin/themis'
+  let s:spec.args = []
+  let s:spec.test_file = { context -> vcoder#testrunner#themis#test_file(context) }
 
-  return spec
+  return s:spec
 endfunction
 
 
@@ -45,8 +46,8 @@ function! vcoder#testrunner#themis#init() abort
   return s:themis
 endfunction
 
-function! vcoder#testrunner#themis#is_deployed() abort
-   return filereadable(s:themis.cmd)
+function! vcoder#testrunner#themis#test_file(context) abort
+  return [s:spec.cmd] + s:spec.args + [a:context.test_candidate]
 endfunction
 
 function! vcoder#testrunner#themis#runner(context) abort
