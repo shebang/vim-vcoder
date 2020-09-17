@@ -1,8 +1,3 @@
-""
-" @section Utilities, utils
-" Module containing utility functions.
-"
-
 
 if !exists('s:previewheight_orig')
   let s:previewheight_orig = &previewheight

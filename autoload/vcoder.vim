@@ -1,3 +1,10 @@
+""
+" @section Introduction, intro
+" @stylized shebang
+" @library
+" @order intro dict
+" vcoder is a test execution framework for vim.
+"
 
 function! vcoder#init() abort
   let s:vcoder = {}

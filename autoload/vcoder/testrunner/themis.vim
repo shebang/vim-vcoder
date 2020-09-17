@@ -1,5 +1,30 @@
 " {{{1: Interface
 " ============================================================================
+""
+" Returns a spec |Dict| for registering this test runner with vcoder.
+"
+" * testrunner_spec.name: the name of this test runner
+" * testrunner_spec.install_cmd: the command to use for installing your test runner
+" * testrunner_spec.update_cmd: the command to use for updating your test runner
+" * testrunner_spec.cmd: The command to execute test runner
+" * testrunner_spec.args Additional argruments for the cmd
+"
+"
+function! vcoder#testrunner#themis#spec() abort
+
+  let spec = {}
+  let spec.name = 'themis'
+  let spec.dir_name = vcoder#cache_path() . '/vim-themis'
+  let spec.install_cmd = [
+    \ 'git', 'clone', 'https://github.com/thinca/vim-themis ', spec.dir_name]
+  let spec.update_cmd = [ 'cd', spec.dir_name,  'git', 'pull', 'cd -']
+
+  let spec.cmd = spec.dir_name . '/bin/themis'
+  let spec.args = []
+
+  return spec
+endfunction
+
 
 function! vcoder#testrunner#themis#init() abort
 
