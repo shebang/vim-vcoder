@@ -9,4 +9,6 @@ if exists('g:loaded_vcoder')
 endif
 let g:loaded_vcoder = 1
 
+call vcoder#init()
+
 command! VcoderTestFile call vcoder#event#dispatch()

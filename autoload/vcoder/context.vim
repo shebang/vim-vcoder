@@ -2,6 +2,14 @@
 let s:context = {}
 let s:context.buffers = {}
 
+if !exists('#vcoder_context_handler')
+  augroup vcoder_context_handler
+    autocmd!
+    autocmd BufRead * call vcoder#context#update()
+    autocmd FileType * call vcoder#context#set_filetype()
+  augroup END
+endif
+
 function! vcoder#context#get() abort
   return s:context
 endfunction

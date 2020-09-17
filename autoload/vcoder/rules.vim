@@ -20,9 +20,13 @@ function! vcoder#rules#_init() abort
     \ }
   let s:rules.ft.vim.testsuite = {
     \ 'location': '%project_root%/test/themis',
+<<<<<<< HEAD
     \ 'autoexec': v:true,
     \ }
 
+=======
+    \ }
+>>>>>>> refactor-test-targets
 
 endfunction
 

@@ -9,6 +9,6 @@ endfunction
 
 function! s:suite.test_run_file() abort
 
-
+  call vcoder#testrunner#register('themis')
 
 endfunction

@@ -15,3 +15,8 @@ function! vcoder#util#resolve_placeholders(text, values, ...) abort
   return text
 
 endfunction
+
+" from: autoload/deoplete/util.vim
+function! vcoder#util#convert2list(expr) abort
+  return type(a:expr) ==# v:t_list ? a:expr : [a:expr]
+endfunction
