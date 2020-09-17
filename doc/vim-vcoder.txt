@@ -17,6 +17,26 @@ programmers who want to run automated tests in their editor.
 ==============================================================================
 FUNCTIONS                                               *vim-vcoder-functions*
 
+vcoder#init()                                                  *vcoder#init()*
+  Initializes vcoder
+
+vcoder#enable({ft})                                          *vcoder#enable()*
+  Enable vcoder for a filetype. The argument {ft} can be a list or a single
+  string.
+
+vcoder#disable({ft})                                        *vcoder#disable()*
+  Disable vcoder for a filetype. The argument {ft} can be a list or a single
+  string.
+
+vcoder#enabled_ft()                                      *vcoder#enabled_ft()*
+  Returns a list of enabled filetypes.
+
+vcoder#cache_path()                                      *vcoder#cache_path()*
+  Returns the path to the internal cache where vcoder stores internal data.
+
+vcoder#is_enabled({ft})                                  *vcoder#is_enabled()*
+  Returns true if filetype {ft} is enabled.
+
 vcoder#testrunner#get_target({name}, {context})
                                               *vcoder#testrunner#get_target()*
   Returns the target to execute (file or project). This function is dependant

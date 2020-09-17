@@ -29,8 +29,8 @@
 "
 
 
-
-
+""
+" Initializes vcoder
 function! vcoder#init() abort
   let s:vcoder = {}
   let s:vcoder.cache_path =
@@ -40,19 +40,28 @@ function! vcoder#init() abort
   " call vcoder#testrunner#init()
 endfunction
 
-
-function! vcoder#enable(ft_or_list) abort
-  return vcoder#event#_enable(a:ft_or_list)
+""
+" Enable vcoder for a filetype. The argument {ft} can be a list or a single
+" string.
+function! vcoder#enable(ft) abort
+  return vcoder#event#_enable(a:ft)
 endfunction
 
-function! vcoder#disable(ft_or_list) abort
-  return vcoder#event#_disable(a:ft_or_list)
+""
+" Disable vcoder for a filetype. The argument {ft} can be a list or a single
+" string.
+function! vcoder#disable(ft) abort
+  return vcoder#event#_disable(a:ft)
 endfunction
 
+""
+" Returns a list of enabled filetypes.
 function! vcoder#enabled_ft() abort
   return vcoder#event#_enabled_ft()
 endfunction
 
+""
+" Returns the path to the internal cache where vcoder stores internal data.
 function! vcoder#cache_path() abort
   if !exists('s:vcoder')
     call vcoder#init()
@@ -60,6 +69,8 @@ function! vcoder#cache_path() abort
   return s:vcoder.cache_path
 endfunction
 
+""
+" Returns true if filetype {ft} is enabled.
 function! vcoder#is_enabled(ft) abort
   return vcoder#event#_is_enabled(a:ft)
 endfunction
