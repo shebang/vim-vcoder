@@ -17,6 +17,17 @@ programmers who want to run automated tests in their editor.
 ==============================================================================
 FUNCTIONS                                               *vim-vcoder-functions*
 
+vcoder#testrunner#get_target({name}, {context})
+                                              *vcoder#testrunner#get_target()*
+  Returns the target to execute (file or project). This function is dependant
+  on the values of the following variables. Each may return a test target
+  effectivly overwriting the defaults. Order is as follows
+
+    * b:vcoder_target
+    * g:vcoder_target
+    * default: file
+
+
 vcoder#testrunner#register({name})              *vcoder#testrunner#register()*
   Registers test runner {name} with vcoder
 
